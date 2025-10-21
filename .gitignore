@@ -4,3 +4,10 @@
 /my-app/.turbo/
 /my-app/.next/
 
+
+# Monorepo
+/my-app/node_modules/
+/my-app/.next/
+/my-app/.turbo/
+/my-app/apps/web/.next/
+
