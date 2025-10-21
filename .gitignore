@@ -1,0 +1,6 @@
+
+# Monorepo ignores
+/my-app/node_modules/
+/my-app/.turbo/
+/my-app/.next/
+
