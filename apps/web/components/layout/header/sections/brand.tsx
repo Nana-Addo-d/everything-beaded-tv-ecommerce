@@ -2,22 +2,35 @@
 
 import React from "react";
 import Link from "next/link";
+import { Store } from "lucide-react";
 
-/**
- * Brand
- * - Placeholder logo + brand text
- * - Acts as a link to the homepage
- */
+type BrandProps = {
+  className?: string
+}
 
-export function Brand() {
+export function Brand({ className }: Readonly<BrandProps>) {
     return (
-    <Link href="/" className="flex items-center gap-2 font-semibold">
-      {/* Placeholder logo box; replace with an img/svg later */}
-        <span
+    <Link
+      href="/"
+      aria-label="Go to homepage"
+      className={["group inline-flex items-center gap-2", className].filter(Boolean).join(" ")}
+    >
+      {/* Placeholder logo: replace with your SVG later */}
+      <span
+        className="
+          inline-flex h-8 w-8 items-center justify-center rounded-md
+          bg-primary/10 text-primary group-hover:bg-primary/15
+          transition-colors
+        "
         aria-hidden
-        className="inline-block size-6 rounded-md bg-foreground/20"
-        />
-        <span>EB Marketplace</span>
+      >
+        <Store className="h-5 w-5" />
+      </span>
+
+      {/* Wordmark */}
+      <span className="text-lg font-semibold tracking-tight">
+        Everything Beaded
+      </span>
     </Link>
-    )
+  )
 }

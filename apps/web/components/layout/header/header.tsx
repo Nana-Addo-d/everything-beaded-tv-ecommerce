@@ -11,12 +11,15 @@
 
 import React from "react";
 import { Separator } from "@components/separator"
+import { Skeleton } from "@components/skeleton"
+
 
 // NOTE: Keep the imports commented until each file exists to avoid TS errors.
-// import { Brand } from "./brand"
-// import { MainNav } from "./main-nav"
-// import { SearchTrigger } from "./search-trigger"
-// import { HeaderActions } from "./header-actions"
+import { Brand } from "./sections/brand"
+import { MainNav } from "./sections/main-nav"
+import { SearchTrigger } from "./sections/search-trigger"
+import { ModeToggle } from "./sections/mode-toggle"
+import { HeaderActions } from "./sections/header-actions"
 
 type HeaderProps = { children?: React.ReactNode }
 
@@ -31,32 +34,38 @@ export function Header({ children }: Readonly<HeaderProps>) {
             // Accessibility: landmarks help screen readers jump to header quickly.
                 aria-label="Site header"
             >
-                <div className="mx-auto max-w-6xl px-4">
+                <div className="mx-auto px-4">
                     <div className="flex h-14 items-center justify-between gap-3">
-                    {/* Left cluster: Brand + Primary Navigation */}
-                    <div className="flex min-w-0 items-center gap-4">
-                        {/* TODO: <Brand /> will render logo + brand name linking to "/" */}
-                        <div className="w-[140px] shrink-0" aria-hidden>
-                        {/* Placeholder to preserve layout until Brand is implemented */}
+                        {/* Left cluster: Brand + Primary Navigation */}
+                        <div className="flex min-w-0 items-center gap-4">
+                            {/* <Brand /> render logo + brand name linking to "homepage" */}
+                            <div className="shrink-0">
+                                <Brand />
+                            </div>
                         </div>
 
-                        {/* TODO: <MainNav /> will host the NavigationMenu (Buyer/Seller-aware) */}
-                        <nav className="hidden md:block min-w-0">
-                        {/* Placeholder for Navigation Menu */}
-                        </nav>
-                    </div>
+                        {/* Center cluster: MainNav + Search (centered) */}
+                        <div className="flex-1 flex items-center justify-center gap-4">
+                            {/* Main navigation (md+) */}
+                            <nav className="hidden md:block">
+                                <MainNav />
+                            </nav>
 
-                    {/* Center cluster: Search trigger (popover) */}
-                    <div className="flex-1 max-w-xl">
-                        {/* TODO: <SearchTrigger /> will open a command palette / popover search */}
-                        <div className="h-9 rounded-xl border border-dashed" aria-hidden />
-                    </div>
+                            {/* Search size tuned: narrower on mobile, wider on md+ */}
+                            <div className=" max-w-[14rem] sm:max-w-[18rem] md:max-w-[28rem]">
+                                <SearchTrigger />
+                            </div>
+                        </div>
 
-                    {/* Right cluster: notifications, cart, profile, theme toggle */}
-                    <div className="flex items-center gap-2">
-                        {/* TODO: <HeaderActions /> will contain 🛎, 🛒, profile, theme toggle */}
-                        <div className="w-[180px] h-9 rounded-xl border border-dashed" aria-hidden />
-                    </div>
+                        {/* Right cluster: notifications, cart, profile, theme toggle */}
+                        <div className="flex items-center gap-2">
+                            {/* TODO: <HeaderActions /> will contain 🛎, 🛒, profile, theme toggle */}
+                                <HeaderActions />
+                            {/* Theme toggle */}
+                            <div className="ml-1">
+                                <ModeToggle />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
