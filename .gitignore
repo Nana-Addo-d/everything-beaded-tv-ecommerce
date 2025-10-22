@@ -1,13 +1,14 @@
 
 # Monorepo ignores
-/my-app/node_modules/
-/my-app/.turbo/
-/my-app/.next/
+/node_modules/
+/.turbo/
+/.next/
 
 
 # Monorepo
-/my-app/node_modules/
-/my-app/.next/
-/my-app/.turbo/
-/my-app/apps/web/.next/
+/node_modules/
+/.next/
+/.turbo/
+/apps/web/.next/
 
+node_modules
