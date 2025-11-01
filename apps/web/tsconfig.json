@@ -7,7 +7,7 @@
       "@/*": ["./*"],
       "@workspace/ui/*": ["../../packages/ui/src/*"],
       "@components/*": ["../../packages/ui/src/components/*"],
-      "@social/*": ["../../packages/ui/social/*"]
+      "@logos/*": ["../../packages/ui/public/logos/*"]
     },
     "plugins": [
       {
