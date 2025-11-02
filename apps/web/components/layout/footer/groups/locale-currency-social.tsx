@@ -126,11 +126,19 @@ export function GroupLocaleCurrencySocial() {
         setCurrency(c)
     }, [])
     React.useEffect(() => {
+    if (typeof window !== "undefined") {
         localStorage.setItem("eb.locale", locale)
+        window.dispatchEvent(new CustomEvent("eb:prefs", { detail: { locale } }))
+    }
     }, [locale])
+
     React.useEffect(() => {
+    if (typeof window !== "undefined") {
         localStorage.setItem("eb.currency", currency)
+        window.dispatchEvent(new CustomEvent("eb:prefs", { detail: { currency } }))
+    }
     }, [currency])
+
 
     return (
         <div>

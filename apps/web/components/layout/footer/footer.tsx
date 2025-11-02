@@ -27,6 +27,7 @@ import { GroupShoppingWithUs } from "./groups/shopping-with-us"
 import { GroupWorkingWithUs } from "./groups/working-with-us"
 import { GroupPayWith } from "./groups/pay-with"
 import { GroupLocaleCurrencySocial } from "./groups/locale-currency-social"
+import { BottomBar } from "./groups/bottom-bar"
 
 type FooterProps = {
     className?: string
@@ -59,21 +60,7 @@ export function Footer({ className }: Readonly<FooterProps>) {
             <Separator />
 
             {/* Layer 1: Condensed bottom bar */}
-            <div className="mx-auto w-full max-w-full px-4 py-4 text-xs text-muted-foreground">
-                <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-                <div className="flex items-center gap-2">
-                    <Skeleton className="h-3 w-24" aria-hidden /> {/* © year + brand */}
-                    <span>•</span>
-                    <Skeleton className="h-3 w-20" aria-hidden /> {/* Privacy */}
-                    <span>•</span>
-                    <Skeleton className="h-3 w-16" aria-hidden /> {/* Terms */}
-                </div>
-                <div className="flex items-center gap-2">
-                    <Skeleton className="h-6 w-16 rounded" aria-hidden /> {/* Locale pill */}
-                    <Skeleton className="h-6 w-16 rounded" aria-hidden /> {/* Currency pill */}
-                </div>
-                </div>
-            </div>
+            <BottomBar />
         </footer>
     )
 }
