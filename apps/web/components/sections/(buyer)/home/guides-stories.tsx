@@ -67,7 +67,7 @@ export function BuyerGuidesStories() {
         {STORIES.map((s) => (
           <Card key={s.id} className="overflow-hidden rounded-xl">
             <Link
-              href={`/apps/web/app/(content)/stories/${s.slug}`}
+              href={`/stories/${s.slug}`}
               className="block"
               aria-label={`${s.title} — read`}
             >
@@ -84,7 +84,7 @@ export function BuyerGuidesStories() {
                 <Badge variant={s.tag === "Guide" ? "secondary" : "default"}>{s.tag}</Badge>
                 <span className="text-xs text-muted-foreground">{s.readTime} read</span>
               </div>
-              <Link href={`/apps/web/app/(content)/stories/${s.slug}`} className="mt-2 block">
+              <Link href={`/stories/${s.slug}`} className="mt-2 block">
                 <h3 className="line-clamp-2 text-sm font-medium leading-snug">{s.title}</h3>
               </Link>
               <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{s.excerpt}</p>
@@ -92,7 +92,7 @@ export function BuyerGuidesStories() {
             </CardContent>
 
             <CardFooter className="p-3 pt-0">
-              <Link href={`/apps/web/app/(content)/stories/${s.slug}`} className="w-full">
+              <Link href={`/stories/${s.slug}`} className="w-full">
                 <Button size="sm" variant="outline" className="w-full">
                   Read
                 </Button>
