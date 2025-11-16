@@ -58,9 +58,9 @@ export function BuyerGuidesStories() {
     <section aria-label="Guides & stories" className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold tracking-tight">Guides & Stories</h2>
-        <Link href="/apps/web/app/(content)/stories" className="text-sm underline-offset-4 hover:underline">
-          View all
-        </Link>
+          <Link href="/stories" className="text-sm underline-offset-4 hover:underline">
+              View all
+          </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
