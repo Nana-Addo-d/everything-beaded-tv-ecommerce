@@ -22,7 +22,8 @@ import {
   BreadcrumbSeparator,
 } from "@components/breadcrumb"
 
-type Crumb = { href: string; label: string }
+type Crumb = { label: string; href?: string }
+
 type Props = {
   items?: Crumb[]        // override/append if provided
   hideOnRoot?: boolean   // default: true
@@ -71,23 +72,28 @@ export function Breadcrumbs({
           </BreadcrumbLink>
         </BreadcrumbItem>
 
-        {autoItems.map((c, idx) => {
-          const isLast = idx === autoItems.length - 1
-          return (
-            <React.Fragment key={c.href}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {isLast ? (
-                  <BreadcrumbPage>{c.label}</BreadcrumbPage>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link href={c.href}>{c.label}</Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </React.Fragment>
-          )
-        })}
+          {autoItems.map((c, idx) => {
+              const isLast = idx === autoItems.length - 1
+              const key = c.href ?? `${idx}-${c.label}`
+
+              return (
+                  <React.Fragment key={key}>
+                      <BreadcrumbSeparator />
+                      <BreadcrumbItem>
+                          {isLast || !c.href ? (
+                              // Last crumb OR no href → render as plain page text
+                              <BreadcrumbPage>{c.label}</BreadcrumbPage>
+                          ) : (
+                              // Has href and is not last → render as link
+                              <BreadcrumbLink asChild>
+                                  <Link href={c.href}>{c.label}</Link>
+                              </BreadcrumbLink>
+                          )}
+                      </BreadcrumbItem>
+                  </React.Fragment>
+              )
+          })}
+
       </BreadcrumbList>
     </Breadcrumb>
   )
