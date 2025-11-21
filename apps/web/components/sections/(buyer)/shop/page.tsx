@@ -21,6 +21,9 @@ import { Skeleton } from "@components/skeleton"
 import { Button } from "@components/button"
 import { Star, MapPin, Package, Users, CheckCircle2 } from "lucide-react"
 
+import { BuyerShopHeader } from "./subsections/shop-header"
+
+
 export default function BuyerShopSection() {
     return (
         <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8 space-y-6">
@@ -33,7 +36,7 @@ export default function BuyerShopSection() {
             />
 
             {/* Shop header (similar to ShopHeader in your example) */}
-            <ShopHeaderPlaceholder />
+            <BuyerShopHeader slug="sample-shop" />
 
             {/* Main layout: sidebar filters + products */}
             <div className="flex flex-col gap-6 lg:flex-row">
@@ -85,86 +88,5 @@ export default function BuyerShopSection() {
                 </section>
             </div>
         </section>
-    )
-}
-
-/**
- * Temporary shop header UI, similar to your ShopHeader component.
- * Later we’ll replace static values with real shop data.
- */
-function ShopHeaderPlaceholder() {
-    return (
-        <Card className="overflow-hidden border bg-card">
-            <CardHeader className="flex flex-col gap-4 border-b bg-muted/40 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-start gap-4">
-                    {/* Shop avatar placeholder */}
-                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/40 to-primary/70" />
-
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-lg font-semibold tracking-tight sm:text-xl">
-                                Sample Artisan Shop
-                            </h1>
-                            <Badge variant="outline" className="inline-flex items-center gap-1 text-[11px]">
-                                <CheckCircle2 className="h-3 w-3 text-emerald-500" />
-                                Verified
-                            </Badge>
-                        </div>
-                        <p className="text-xs text-muted-foreground sm:text-sm">
-                            Handmade beaded jewelry and decor pieces with West African motifs and stories.
-                        </p>
-
-                        <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
-              <span className="inline-flex items-center gap-1">
-                <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                <span className="font-medium">4.8</span>
-                <span>(1,247 reviews)</span>
-              </span>
-                            <span className="inline-flex items-center gap-1">
-                <MapPin className="h-3.5 w-3.5" />
-                Ships from Accra, Ghana
-              </span>
-                            <span className="inline-flex items-center gap-1">
-                <Package className="h-3.5 w-3.5" />
-                156 products
-              </span>
-                            <span className="inline-flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
-                2,304 followers
-              </span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                        <Link href="#contact">Contact shop</Link>
-                    </Button>
-                    <Button size="sm" variant="default">
-                        Follow
-                    </Button>
-                </div>
-            </CardHeader>
-
-            <CardContent className="p-4">
-                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
-          <span className="inline-flex items-center gap-1">
-            <Badge variant="outline" className="text-[11px]">
-              Beadwork
-            </Badge>
-            <Badge variant="outline" className="text-[11px]">
-              Kente-inspired
-            </Badge>
-            <Badge variant="outline" className="text-[11px]">
-              Woman-led co-op
-            </Badge>
-          </span>
-                    <span className="hidden text-xs text-muted-foreground sm:inline">
-            Ships within 5–7 business days • Free local pickup in Accra
-          </span>
-                </div>
-            </CardContent>
-        </Card>
     )
 }
