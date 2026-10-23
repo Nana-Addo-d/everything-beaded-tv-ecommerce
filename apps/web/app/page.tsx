@@ -1,9 +1,9 @@
-import BuyerHomeSection from "@/components/sections/(buyer)/page"
+import BuyerHomeSection from "@/components/sections/(buyer)/page";
 
 export default function Home() {
   return (
-    <main className="min-h-dvh grid w-full mx-auto items-center justify-center p-4 ">
+    <main className="mx-auto min-h-dvh w-full py-6">
       <BuyerHomeSection />
     </main>
-  )
+  );
 }

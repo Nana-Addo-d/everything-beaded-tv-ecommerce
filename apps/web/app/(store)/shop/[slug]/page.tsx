@@ -1,13 +1,19 @@
-// apps/web/app/(store)/shop/[slug]/page.tsx
-import * as React from "react"
-import BuyerShopSection from "@/components/sections/(buyer)/shop/page"
+import { notFound, redirect } from "next/navigation";
 
-type PageProps = {
-    params: { slug: string }
-}
+const LEGACY_SHOPS = [
+  "sample-shop",
+  "kente-works",
+  "kisii-craft",
+  "mali-textiles",
+  "nomad-leather",
+];
 
-export default function ShopPage({ params }: PageProps) {
-    // Later: fetch shop data by params.slug (RSC)
-    void params
-    return <BuyerShopSection />
+export default async function ShopPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  if (!LEGACY_SHOPS.includes(slug)) notFound();
+  redirect("/shop");
 }
