@@ -28,6 +28,11 @@ try:
     run(['docker','run','--detach','--name',NAME,'--network','none','--mount','type=tmpfs,destination=/var/lib/postgresql/data','-e','POSTGRES_HOST_AUTH_METHOD=trust','postgres:17.11-alpine3.24'])
     run(['docker','exec',NAME,'sh','-c','until pg_isready -U postgres >/dev/null 2>&1; do sleep 1; done'])
     sql('create role anon; create role authenticated; create role service_role bypassrls;')
+    sql("""create schema auth;
+      create table auth.users(id uuid primary key,email text,email_confirmed_at timestamptz,is_anonymous boolean default false,banned_until timestamptz);
+      create table auth.mfa_factors(id uuid primary key,user_id uuid references auth.users(id),status text,factor_type text);
+      create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),factor_id uuid references auth.mfa_factors(id),aal text,not_after timestamptz);
+    """)
     for migration in sorted((ROOT/'supabase/migrations').glob('*.sql')): sql(migration.read_text(encoding='utf8'))
     catalogue=json.loads((ROOT/'apps/web/features/catalog/catalogue.json').read_text(encoding='utf8'))
     catalogue_csv=io.StringIO(newline='')
@@ -142,6 +147,78 @@ try:
     value(f"select public.finish_commerce_job('{job['id']}','{job['lease_token']}','done',null,now());",'service_role')
     assert value(f"select status from public.commerce_jobs where id='{job['id']}';")=='processing'
     passed('events arriving during processing survive and stale workers cannot finish a newer claim')
+    actor,session,factor,outsider=[str(uuid.uuid4()) for _ in range(4)]
+    sql(f"insert into auth.users(id,email) values('{actor}','merchant@example.test'),('{outsider}','outsider@example.test'); insert into auth.sessions(id,user_id,aal) values('{session}','{actor}','aal1'); insert into public.merchant_approvals(email,role) values('merchant@example.test','owner');")
+    access=f"select public.merchant_access('{actor}','{session}',false);"
+    rejected(access,'MERCHANT_SESSION')
+    sql(f"update auth.users set email_confirmed_at=now() where id='{actor}';")
+    assert value(access,'service_role')=='owner'
+    assert value('select count(*) from public.merchant_approvals;')=='0'
+    rejected(f"select public.merchant_access('{actor}','{session}',true);",'MERCHANT_MFA')
+    sql(f"insert into auth.mfa_factors values('{factor}','{actor}','verified','totp');update auth.sessions set aal='aal2',factor_id='{factor}' where id='{session}';")
+    assert value(f"select public.merchant_access('{actor}','{session}',true);",'service_role')=='owner'
+    for role in ['anon','authenticated']:
+        rejected(access,'permission denied',role)
+        for table in ['merchant_approvals','merchant_members','merchant_activity','merchant_operations','merchant_media']:
+            rejected(f'select * from public.{table};','permission denied',role)
+        rejected(f"select merchant_private.assert_access('{actor}','{session}',false);",'permission denied',role)
+    rejected("insert into public.merchant_approvals(email,role) values('attacker@example.test','owner');",'permission denied')
+    passed('merchant activation requires confirmed approved email and MFA; client roles cannot read data or self-promote')
+    def merchant(action,target,revision,data,key=None):
+        key=key or str(uuid.uuid4())
+        return f"select public.merchant_write('{actor}','{session}','{key}',{quote(action)},{quote(target)},{revision},{quote(json.dumps(data))}::jsonb);"
+    pdata={'title':'Synthetic draft','category':'bags','subcategory':'Test bags','description':'Synthetic description for integration testing.','materials':['Test material'],'material_status':'visual','images':['/images/products/test.jpg'],'attributes':{'contents':'One item','colors':['Blue']},'published':False,'details_approved':False}
+    value(merchant('product.create','merchant-draft',0,pdata),'service_role')
+    assert value("select published from public.products where slug='merchant-draft';")=='f'
+    rev=int(value("select revision from public.products where slug='merchant-draft';"))
+    key=str(uuid.uuid4());command=merchant('price.save','merchant-draft',rev,{'price_minor':12345},key)
+    first=value(command,'service_role');assert value(command,'service_role')==first
+    assert value("select count(*) from public.merchant_activity where action='price.save' and target='merchant-draft';")=='1'
+    rejected(merchant('price.save','merchant-draft',rev,{'price_minor':999}),'MERCHANT_CONFLICT')
+    rejected(merchant('price.save','merchant-draft',rev,{'price_minor':999},key),'MERCHANT_RETRY_CONFLICT')
+    passed('merchant drafts and exact prices persist with optimistic conflicts and idempotent audited retries')
+    def revision(slug):return int(value(f"select revision from public.products where slug={quote(slug)};"))
+    value(merchant('stock.adjust','merchant-draft',revision('merchant-draft'),{'mode':'initial','quantity':5,'reason':'Opening test count'}),'service_role')
+    rejected(merchant('stock.adjust','merchant-draft',revision('merchant-draft'),{'mode':'initial','quantity':10,'reason':'Second opening count'}),'MERCHANT_STOCK_INITIALIZED')
+    revision_before=revision('merchant-draft')
+    with concurrent.futures.ThreadPoolExecutor(2) as pool:
+        changes=list(pool.map(lambda _:sql(merchant('stock.adjust','merchant-draft',revision_before,{'mode':'adjust','quantity':-4,'reason':'Concurrent adjustment'}),'service_role',False),range(2)))
+    assert sorted(r.returncode==0 for r in changes)==[False,True]
+    assert value("select stock_quantity from public.products where slug='merchant-draft';")=='1'
+    rejected(merchant('stock.adjust','merchant-draft',revision('merchant-draft'),{'mode':'adjust','quantity':-2,'reason':'Too much removed'}),'MERCHANT_STOCK_NEGATIVE')
+    sql("update public.products set attributes=attributes || '{\"sourceIndices\":[123]}'::jsonb where slug='merchant-draft';")
+    pdata['title']='Edited synthetic draft';value(merchant('product.save','merchant-draft',revision('merchant-draft'),pdata),'service_role')
+    assert value("select price_minor||':'||stock_quantity||':'||(attributes->>'sourceIndices') from public.products where slug='merchant-draft';")=='12345:1:[123]'
+    passed('concurrent stock edits cannot oversell or overwrite newer state; product edits preserve price stock and source provenance')
+    product('merchant-checkout',2)
+    before=revision('merchant-checkout'); merchant_order=json.loads(value(reserve('merchant-checkout',str(uuid.uuid4()),access='e'*64),'service_role'))
+    rejected(merchant('stock.adjust','merchant-checkout',before,{'mode':'adjust','quantity':1,'reason':'Stale stock edit'}),'MERCHANT_CONFLICT')
+    assert value("select stock_quantity from public.products where slug='merchant-checkout';")=='1'
+    rejected(merchant('order.fulfill',merchant_order['id'],1,{'status':'dispatched','tracking_number':'TEST'}),'FULFILLMENT_TRANSITION')
+    value(f"select public.record_payment('{merchant_order['reference']}',2500,'GHS','buyer@example.test');",'service_role')
+    request_id=value(f"select (public.request_order_support('{merchant_order['id']}','{'e'*64}','cancellation','Synthetic customer cancellation question','{uuid.uuid4()}')).id;",'service_role')
+    order_revision=lambda:int(value(f"select revision from public.orders where id='{merchant_order['id']}';"))
+    rejected(merchant('order.fulfill',merchant_order['id'],order_revision(),{'status':'dispatched','tracking_number':'TEST'}),'ORDER_REQUEST_REVIEW')
+    value(merchant('request.reply',request_id,1,{'status':'closed','reply':'Synthetic review resolved; customer confirmed dispatch.'}),'service_role')
+    assert value(f"select message from public.order_requests where id='{request_id}';")=='Synthetic customer cancellation question'
+    value(merchant('order.fulfill',merchant_order['id'],order_revision(),{'status':'dispatched','tracking_number':'TEST-REF','tracking_url':'https://example.test/track'}),'service_role')
+    value(merchant('order.fulfill',merchant_order['id'],order_revision(),{'status':'delivered'}),'service_role')
+    assert value("select stock_quantity from public.products where slug='merchant-checkout';")=='1'
+    assert value(f"select fulfillment_status from public.orders where id='{merchant_order['id']}';")=='delivered'
+    passed('checkout conflicts, customer request resolution and merchant fulfilment preserve payment and stock invariants')
+    mutation=merchant('price.save','merchant-draft',revision('merchant-draft'),{'price_minor':20000})
+    sql(f"update public.merchant_members set active=false where user_id='{actor}';")
+    rejected(mutation,'MERCHANT_FORBIDDEN')
+    sql(f"update public.merchant_members set active=true where user_id='{actor}';update auth.sessions set not_after=now()-interval '1 second' where id='{session}';")
+    rejected(mutation,'MERCHANT_SESSION')
+    sql(f"update auth.sessions set not_after=null where id='{session}';update auth.users set banned_until=now()+interval '1 hour' where id='{actor}';")
+    rejected(mutation,'MERCHANT_SESSION')
+    sql(f"update auth.users set banned_until=null where id='{actor}';update auth.mfa_factors set status='unverified' where id='{factor}';")
+    rejected(mutation,'MERCHANT_MFA')
+    sql(f"delete from auth.sessions where id='{session}';")
+    rejected(mutation,'MERCHANT_SESSION')
+    rejected('update public.merchant_activity set action=\'tampered\';','permission denied')
+    passed('membership revocation banned users expired/revoked sessions and removed MFA immediately deny merchant writes; audit is append-only')
     print(json.dumps({'passed':len(checks),'database':'PostgreSQL 17.11','isolated':True,'checks':checks}))
 finally:
     # NAME is generated here, not supplied by the caller; no shared database is reset.

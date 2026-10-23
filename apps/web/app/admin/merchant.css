@@ -1,0 +1,508 @@
+.merchant-shell,
+.merchant-login {
+  --merchant-accent: #57338d;
+  --merchant-border: #e3dfeb;
+  --merchant-muted: #686171;
+  color: #262130;
+  background: #f7f6fa;
+  min-height: 100dvh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.merchant-shell {
+  display: grid;
+  grid-template-columns: 242px minmax(0, 1fr);
+}
+.merchant-sidebar {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  padding: 32px 20px;
+  background: #fff;
+  border-right: 1px solid var(--merchant-border);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.merchant-brand {
+  font-size: 24px;
+  font-weight: 750;
+  line-height: 1.1;
+  letter-spacing: -0.6px;
+  text-decoration: none;
+}
+.merchant-brand span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--merchant-muted);
+  font-weight: 500;
+  margin-top: 14px;
+}
+.merchant-sidebar nav {
+  display: grid;
+  gap: 6px;
+}
+.merchant-sidebar nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  border: 0;
+  background: none;
+  text-align: left;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--merchant-muted);
+}
+.merchant-sidebar nav button[aria-current="page"] {
+  background: #f0eaf9;
+  color: var(--merchant-accent);
+  font-weight: 650;
+}
+.merchant-sidebar nav button span {
+  margin-left: auto;
+  font-size: 12px;
+}
+.merchant-sidebar-bottom {
+  margin-top: auto;
+  display: grid;
+  gap: 12px;
+}
+.merchant-sidebar-bottom a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.merchant-sidebar-bottom p {
+  overflow-wrap: anywhere;
+  color: var(--merchant-muted);
+  font-size: 12px;
+}
+.merchant-main {
+  min-width: 0;
+  max-width: 1500px;
+  width: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.merchant-page-heading,
+.merchant-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.merchant-page-heading h1,
+.merchant-login h1 {
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.7px;
+  margin-bottom: 10px;
+}
+.merchant-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: var(--merchant-muted);
+  margin-bottom: 8px;
+}
+.merchant-muted {
+  color: var(--merchant-muted);
+  font-size: 13px;
+}
+.merchant-panel {
+  background: #fff;
+  border: 1px solid var(--merchant-border);
+  border-radius: 16px;
+  padding: 26px;
+  display: grid;
+  gap: 18px;
+}
+.merchant-panel h2 {
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+.merchant-panel h3 {
+  font-size: 16px;
+  font-weight: 650;
+}
+.merchant-panel p {
+  margin: 0;
+}
+.merchant-panel form,
+.merchant-stack {
+  display: grid;
+  gap: 18px;
+}
+.merchant-shell button,
+.merchant-login button {
+  font: inherit;
+  cursor: pointer;
+  min-height: 40px;
+  border: 1px solid var(--merchant-border);
+  border-radius: 9px;
+  padding: 8px 14px;
+  background: #fff;
+  transition: background 0.15s;
+}
+.merchant-shell button:hover,
+.merchant-login button:hover {
+  background: #f4f0fa;
+}
+.merchant-shell button:disabled,
+.merchant-login button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.merchant-shell button.merchant-primary,
+.merchant-login button.merchant-primary {
+  background: var(--merchant-accent);
+  border-color: var(--merchant-accent);
+  color: white;
+  font-weight: 600;
+}
+.merchant-shell :focus-visible,
+.merchant-login :focus-visible {
+  outline: 3px solid #a78bce;
+  outline-offset: 3px;
+}
+.merchant-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.merchant-shell label,
+.merchant-login label {
+  display: grid;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.merchant-shell input:not([type="checkbox"]),
+.merchant-shell select,
+.merchant-shell textarea,
+.merchant-login input:not([type="checkbox"]) {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  border: 1px solid #d5cedf;
+  border-radius: 8px;
+  background: #fff;
+  color: #262130;
+  padding: 9px 12px;
+  font: inherit;
+  font-weight: 400;
+}
+.merchant-shell input[readonly] {
+  background: #f5f3f8;
+  color: var(--merchant-muted);
+}
+.merchant-shell textarea {
+  resize: vertical;
+}
+.merchant-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.merchant-form-grid form {
+  align-content: start;
+}
+.merchant-shell .merchant-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-weight: 400;
+}
+.merchant-check input {
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  accent-color: var(--merchant-accent);
+  flex-shrink: 0;
+}
+.merchant-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+}
+.merchant-metrics button {
+  padding: 22px;
+  text-align: left;
+  display: grid;
+  gap: 8px;
+  border-radius: 14px;
+}
+.merchant-metrics strong,
+.merchant-stat {
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.merchant-metrics span {
+  color: var(--merchant-muted);
+  font-size: 13px;
+}
+.merchant-metrics span:last-child {
+  font-size: 11px;
+  color: var(--merchant-accent);
+}
+.merchant-toolbar {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.merchant-toolbar label:first-child {
+  flex: 1;
+  min-width: 200px;
+}
+.merchant-toolbar label {
+  min-width: 140px;
+}
+.merchant-table-wrap {
+  overflow: auto;
+  border: 1px solid var(--merchant-border);
+  border-radius: 14px;
+  background: #fff;
+}
+.merchant-table-wrap table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  min-width: 640px;
+}
+.merchant-table-wrap th {
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--merchant-muted);
+  background: #faf9fc;
+  font-weight: 600;
+  padding: 14px 18px;
+}
+.merchant-table-wrap td {
+  padding: 16px 18px;
+  border-top: 1px solid var(--merchant-border);
+  vertical-align: middle;
+}
+.merchant-table-wrap small {
+  display: block;
+  color: var(--merchant-muted);
+  font-size: 12px;
+}
+.merchant-product-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.merchant-thumb {
+  width: 64px;
+  flex-shrink: 0;
+}
+.merchant-badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px 10px;
+  background: #f0eaf9;
+  color: var(--merchant-accent);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.merchant-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+}
+.merchant-pagination span {
+  font-size: 13px;
+  color: var(--merchant-muted);
+}
+.merchant-notice,
+.merchant-error {
+  border-radius: 10px;
+  padding: 14px 18px;
+  overflow-wrap: anywhere;
+}
+.merchant-notice {
+  background: #efedf8;
+  border: 1px solid #ddd5ed;
+  color: #49346a;
+}
+.merchant-error {
+  background: #fff1f2;
+  border: 1px solid #f4cdd3;
+  color: #923344;
+}
+.merchant-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  margin-block: 16px;
+}
+.merchant-photo-grid button {
+  padding: 5px 8px;
+  font-size: 11px;
+}
+.merchant-photo-grid .merchant-actions {
+  gap: 5px;
+  margin-top: 6px;
+}
+.merchant-shell fieldset {
+  padding: 18px;
+  border: 1px solid var(--merchant-border);
+  border-radius: 12px;
+}
+.merchant-shell legend {
+  padding: 0 6px;
+  font-weight: 600;
+}
+.merchant-lines {
+  list-style: none;
+  padding: 0;
+}
+.merchant-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--merchant-border);
+}
+.merchant-message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.merchant-reply {
+  border-left: 3px solid #d3c3e8;
+  padding: 10px 16px;
+  background: #faf8fd;
+}
+.merchant-break {
+  overflow-wrap: anywhere;
+  max-width: 260px;
+}
+.merchant-empty {
+  text-align: center;
+  padding: 44px;
+}
+.merchant-login {
+  display: grid;
+  align-content: start;
+  justify-items: center;
+  padding: 60px 20px;
+  gap: 30px;
+}
+.merchant-login > .merchant-panel {
+  width: 100%;
+  max-width: 490px;
+}
+.merchant-login .merchant-brand {
+  font-size: 27px;
+}
+.merchant-login img {
+  margin-inline: auto;
+}
+.merchant-secret {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  padding: 12px;
+  background: #f5f2f9;
+}
+@media (max-width: 1000px) {
+  .merchant-shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .merchant-main {
+    padding: 28px;
+  }
+  .merchant-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .merchant-sidebar {
+    padding: 25px 12px;
+  }
+  .merchant-brand {
+    font-size: 21px;
+  }
+}
+@media (max-width: 700px) {
+  .merchant-shell {
+    display: block;
+  }
+  .merchant-sidebar {
+    position: static;
+    height: auto;
+    padding: 18px;
+    gap: 18px;
+    border-right: 0;
+    border-bottom: 1px solid var(--merchant-border);
+  }
+  .merchant-brand br {
+    display: none;
+  }
+  .merchant-brand span {
+    margin-top: 7px;
+  }
+  .merchant-sidebar nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+  .merchant-sidebar nav button {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .merchant-sidebar-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+  }
+  .merchant-sidebar-bottom p {
+    display: none;
+  }
+  .merchant-main {
+    padding: 22px 14px;
+    gap: 18px;
+  }
+  .merchant-panel {
+    padding: 20px;
+  }
+  .merchant-page-heading h1 {
+    font-size: 27px;
+  }
+  .merchant-page-heading > .merchant-actions {
+    width: 100%;
+  }
+  .merchant-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .merchant-metrics button {
+    padding: 16px;
+  }
+  .merchant-toolbar label {
+    flex: 1;
+  }
+  .merchant-toolbar label:first-child {
+    flex-basis: 100%;
+  }
+  .merchant-pagination {
+    justify-content: space-between;
+  }
+  .merchant-login {
+    padding-top: 32px;
+  }
+}
