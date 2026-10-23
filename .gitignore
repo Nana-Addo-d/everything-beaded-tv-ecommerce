@@ -2,6 +2,7 @@
 # Monorepo ignores
 /node_modules/
 /.turbo/
+**/.turbo/
 /.next/
 
 
@@ -10,5 +11,18 @@
 /.next/
 /.turbo/
 /apps/web/.next/
+/apps/web/.turbo/
 
 node_modules
+
+# Local configuration and private import inputs
+.env*
+!.env.example
+.local/
+supabase/.temp/
+output/
+
+# Local editor and compiler state
+.idea/
+.vscode/
+*.tsbuildinfo

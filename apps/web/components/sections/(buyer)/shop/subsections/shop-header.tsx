@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import Link from "next/link"
 import { Card, CardContent, CardHeader } from "@components/card"
 import { Badge } from "@components/badge"
@@ -11,6 +10,8 @@ import type { Shop } from "../mock-shops"
 type BuyerShopHeaderProps = {
     shop?: Shop | null
 }
+
+const followersNF = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 })
 
 export function BuyerShopHeader({ shop }: BuyerShopHeaderProps) {
     // simple fallback if slug not found
@@ -28,11 +29,6 @@ export function BuyerShopHeader({ shop }: BuyerShopHeaderProps) {
             </Card>
         )
     }
-
-    const followersNF = React.useMemo(
-        () => new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }),
-        []
-    )
 
     return (
         <Card className="overflow-hidden border bg-card">

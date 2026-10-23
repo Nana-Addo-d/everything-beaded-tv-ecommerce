@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["NODE_ENV", "STORE_INDEXABLE"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -17,5 +18,19 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalPassThroughEnv": [
+    "SUPABASE_URL",
+    "SUPABASE_PUBLISHABLE_KEY",
+    "SUPABASE_SECRET_KEY",
+    "STORE_ORIGIN",
+    "PAYSTACK_MODE",
+    "PAYSTACK_SECRET_KEY",
+    "COMMERCE_JOB_SECRET",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASSWORD",
+    "STORE_EMAIL_FROM"
+  ]
 }

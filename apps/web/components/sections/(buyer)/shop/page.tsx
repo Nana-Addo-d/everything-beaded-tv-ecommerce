@@ -12,14 +12,11 @@
  */
 
 import * as React from "react"
-import Link from "next/link"
 import { Breadcrumbs } from "@common/breadcrumbs"
 import { CategoryFilter } from "@filters/category-filter"
-import { Card, CardContent, CardHeader } from "@components/card"
-import { Badge } from "@components/badge"
+import { Card, CardContent } from "@components/card"
 import { Skeleton } from "@components/skeleton"
 import { Button } from "@components/button"
-import { Star, MapPin, Package, Users, CheckCircle2 } from "lucide-react"
 
 import { BuyerShopHeader } from "./subsections/shop-header"
 
@@ -36,7 +33,7 @@ export default function BuyerShopSection() {
             />
 
             {/* Shop header (similar to ShopHeader in your example) */}
-            <BuyerShopHeader slug="sample-shop" />
+            <BuyerShopHeader />
 
             {/* Main layout: sidebar filters + products */}
             <div className="flex flex-col gap-6 lg:flex-row">
